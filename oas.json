@@ -1,0 +1,54 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "World Countries API",
+    "description": "REST API for fetching world country details",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/country": {
+      "post": {
+        "summary": "Get country by ID",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer", "example": 1 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Country details returned successfully"
+          },
+          "404": {
+            "description": "Country not found"
+          }
+        }
+      }
+    },
+    "/os": {
+      "get": {
+        "summary": "Get OS and environment info",
+        "responses": { "200": { "description": "OS info returned" } }
+      }
+    },
+    "/live": {
+      "get": {
+        "summary": "Liveness probe",
+        "responses": { "200": { "description": "Service is live" } }
+      }
+    },
+    "/ready": {
+      "get": {
+        "summary": "Readiness probe",
+        "responses": { "200": { "description": "Service is ready" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+node_modules
+npm-debug.log
+.git
+.cache
+*.md
+!README*.md
+.github/
+node_modules
+.nyc_output
+coverage
+test-results.xml
+reports*
+zap*
+dependency*
+jenkins*
+trivy-image*

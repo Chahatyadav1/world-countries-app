@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Countries Explorer</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a1628; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; color: #4fc3f7; }
+        .subtitle { color: #90caf9; margin-bottom: 2rem; font-size: 1rem; }
+        .card { background: #132035; border-radius: 16px; padding: 2rem; width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+        label { display: block; margin-bottom: 0.5rem; color: #90caf9; font-size: 0.9rem; }
+        input { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #1e3a5f; background: #0d1f36; color: #fff; font-size: 1rem; margin-bottom: 1rem; outline: none; }
+        input:focus { border-color: #4fc3f7; }
+        button { width: 100%; padding: 0.75rem; background: #1565c0; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #1976d2; }
+        .result { margin-top: 1.5rem; background: #0d1f36; border-radius: 10px; padding: 1.2rem; display: none; }
+        .result.show { display: block; }
+        .country-name { font-size: 1.6rem; font-weight: bold; color: #4fc3f7; margin-bottom: 0.5rem; }
+        .info-row { display: flex; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid #1e3a5f; font-size: 0.9rem; }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #90caf9; }
+        .info-value { color: #fff; font-weight: 500; }
+        .pod-info { margin-top: 1rem; font-size: 0.75rem; color: #546e7a; text-align: center; }
+        .error-msg { color: #ef5350; text-align: center; margin-top: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>🌍 World Countries</h1>
+    <p class="subtitle">Explore country details by ID (1 - 10)</p>
+    <div class="card">
+        <label for="countryID">Enter Country ID</label>
+        <input type="number" id="countryID" value="1" min="1" max="10" placeholder="Enter ID (1-10)" />
+        <button id="submit">Search Country</button>
+        <div class="result" id="result">
+            <div class="country-name" id="countryName"></div>
+            <div class="info-row"><span class="info-label">Capital</span><span class="info-value" id="capital"></span></div>
+            <div class="info-row"><span class="info-label">Population</span><span class="info-value" id="population"></span></div>
+            <div class="info-row"><span class="info-label">Continent</span><span class="info-value" id="continent"></span></div>
+            <div class="info-row"><span class="info-label">Currency</span><span class="info-value" id="currency"></span></div>
+        </div>
+        <div class="error-msg" id="errorMsg"></div>
+        <div class="pod-info" id="hostname"></div>
+    </div>
+    <script>
+        window.onload = function() {
+            fetch('/os').then(r => r.json()).then(data => {
+                document.getElementById('hostname').innerHTML = 'Pod - ' + data.os;
+            }).catch(() => {});
+        };
+
+        document.getElementById('submit').addEventListener('click', function() {
+            const id = document.getElementById('countryID').value;
+            document.getElementById('errorMsg').innerText = '';
+            document.getElementById('result').classList.remove('show');
+
+            fetch('/country', {
+                method: 'POST',
+                body: JSON.stringify({ id: id }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(r => { if (r.ok) return r.json(); throw new Error('Not found'); })
+            .then(data => {
+                document.getElementById('countryName').innerText = data.name;
+                document.getElementById('capital').innerText = data.capital;
+                document.getElementById('population').innerText = data.population;
+                document.getElementById('continent').innerText = data.continent;
+                document.getElementById('currency').innerText = data.currency;
+                document.getElementById('result').classList.add('show');
+            })
+            .catch(() => {
+                document.getElementById('errorMsg').innerText = 'Oops! We only have 10 countries. Select a number from 1 - 10';
+            });
+        });
+    </script>
+</body>
+</html>
