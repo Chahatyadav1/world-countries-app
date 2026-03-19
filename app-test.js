@@ -2,11 +2,12 @@ let mongoose = require("mongoose");
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+
+// chai-http v5: use chaiHttp.request.execute directly, no chai.use() needed
 let request = chaiHttp.request.execute;
 
-// Assertion
-chai.should();
-chai.use(chaiHttp);
+// Assertion style
+let should = chai.should();
 
 describe('Countries API Suite', () => {
 
