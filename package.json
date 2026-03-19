@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --exit",
+    "test:debug": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter spec --exit",
     "coverage": "NODE_ENV=test nyc --reporter cobertura --reporter lcov --reporter text --reporter json-summary mocha app-test.js --timeout 10000 --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml --exit"
   },
   "nyc": {

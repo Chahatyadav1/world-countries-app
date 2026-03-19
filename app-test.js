@@ -1,13 +1,10 @@
 let mongoose = require("mongoose");
 let server = require("./app");
-let chai = require("chai");
+let { expect } = require("chai");
 let chaiHttp = require("chai-http");
 
 // chai-http v5: use chaiHttp.request.execute directly, no chai.use() needed
 let request = chaiHttp.request.execute;
-
-// Assertion style
-let should = chai.should();
 
 describe('Countries API Suite', () => {
 
@@ -19,9 +16,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(1);
-                    res.body.should.have.property('name').eql('India');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(1);
+                    expect(res.body).to.have.property('name').eql('India');
                     done();
                 });
         });
@@ -32,9 +29,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(2);
-                    res.body.should.have.property('name').eql('United States');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(2);
+                    expect(res.body).to.have.property('name').eql('United States');
                     done();
                 });
         });
@@ -45,9 +42,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(3);
-                    res.body.should.have.property('name').eql('Germany');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(3);
+                    expect(res.body).to.have.property('name').eql('Germany');
                     done();
                 });
         });
@@ -58,9 +55,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(4);
-                    res.body.should.have.property('name').eql('Brazil');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(4);
+                    expect(res.body).to.have.property('name').eql('Brazil');
                     done();
                 });
         });
@@ -71,9 +68,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(5);
-                    res.body.should.have.property('name').eql('Japan');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(5);
+                    expect(res.body).to.have.property('name').eql('Japan');
                     done();
                 });
         });
@@ -84,9 +81,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(6);
-                    res.body.should.have.property('name').eql('Australia');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(6);
+                    expect(res.body).to.have.property('name').eql('Australia');
                     done();
                 });
         });
@@ -97,9 +94,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(7);
-                    res.body.should.have.property('name').eql('South Africa');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(7);
+                    expect(res.body).to.have.property('name').eql('South Africa');
                     done();
                 });
         });
@@ -110,9 +107,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(8);
-                    res.body.should.have.property('name').eql('Canada');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(8);
+                    expect(res.body).to.have.property('name').eql('Canada');
                     done();
                 });
         });
@@ -123,9 +120,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(9);
-                    res.body.should.have.property('name').eql('France');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(9);
+                    expect(res.body).to.have.property('name').eql('France');
                     done();
                 });
         });
@@ -136,9 +133,9 @@ describe('Countries API Suite', () => {
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('id').eql(10);
-                    res.body.should.have.property('name').eql('Argentina');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('id').eql(10);
+                    expect(res.body).to.have.property('name').eql('Argentina');
                     done();
                 });
         });
@@ -155,7 +152,7 @@ describe('Testing Other Endpoints', () => {
             request(server)
                 .get('/os')
                 .end((err, res) => {
-                    res.should.have.status(200);
+                    expect(res).to.have.status(200);
                     done();
                 });
         });
@@ -166,8 +163,8 @@ describe('Testing Other Endpoints', () => {
             request(server)
                 .get('/live')
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('status').eql('live');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('status').eql('live');
                     done();
                 });
         });
@@ -178,8 +175,8 @@ describe('Testing Other Endpoints', () => {
             request(server)
                 .get('/ready')
                 .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.have.property('status').eql('ready');
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('status').eql('ready');
                     done();
                 });
         });
