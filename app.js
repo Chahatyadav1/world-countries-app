@@ -3,7 +3,7 @@ let server = require("./app");
 let { expect } = require("chai");
 let chaiHttp = require("chai-http");
 
-// chai-http v5: chaiHttp.request.execute works standalone, no chai.use() needed
+// chai-http v5: use chaiHttp.request.execute directly, no chai.use() needed
 let request = chaiHttp.request.execute;
 
 describe('Countries API Suite', () => {
