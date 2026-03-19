@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+
+    <!--
+        CVE-2014-8180 affects the MongoDB SERVER on Red Hat Satellite 6 (empty-password auth bypass).
+        It does NOT affect the mongodb npm driver package (pkg:npm/mongodb).
+        This is a false positive from the NVD CPE match.
+        Reference: https://nvd.nist.gov/vuln/detail/CVE-2014-8180
+    -->
+    <suppress>
+        <notes>
+            CVE-2014-8180 is a server-side vulnerability in MongoDB on Red Hat Satellite 6.
+            It does not affect the mongodb npm driver. This is a false positive.
+        </notes>
+        <packageUrl regex="true">^pkg:npm/mongodb@.*$</packageUrl>
+        <cve>CVE-2014-8180</cve>
+    </suppress>
+
+</suppressions>
