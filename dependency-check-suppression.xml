@@ -32,5 +32,12 @@
         <packageUrl regex="true">^pkg:npm/time-span@.*$</packageUrl>
         <cve>CVE-2017-16115</cve>
     </suppress>
-
+<suppress>
+    <notes>
+        CVE-2025-12657 is a server-side KMIP parser vulnerability in MongoDB Server binaries.
+        It does not affect the mongodb npm driver. This is a false positive.
+    </notes>
+    <packageUrl regex="true">^pkg:npm/mongodb@.*$</packageUrl>
+    <cve>CVE-2025-12657</cve>
+</suppress>
 </suppressions>
