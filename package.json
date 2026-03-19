@@ -24,5 +24,9 @@
     "chai": "*",
     "chai-http": "*",
     "mocha": "*"
+  },
+  "overrides": {
+    "serialize-javascript": ">=7.0.3",
+    "diff": ">=8.0.3"
   }
 }
