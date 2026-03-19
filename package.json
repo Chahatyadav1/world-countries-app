@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter xunit --reporter-options output=./test-results.xml --exit",
+    "test": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter spec --exit",
+    "test:ci": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter xunit --reporter-options output=./test-results.xml --exit",
     "coverage": "NODE_ENV=test nyc --reporter cobertura --reporter lcov --reporter text --reporter json-summary mocha app-test.js --timeout 10000 --reporter xunit --reporter-options output=./test-results.xml --exit"
   },
   "nyc": {
@@ -23,7 +24,7 @@
   },
   "devDependencies": {
     "chai": "^4.4.1",
-    "chai-http": "^5.1.2",
+    "chai-http": "^4.4.0",
     "mocha": "^10.7.3"
   },
   "overrides": {
