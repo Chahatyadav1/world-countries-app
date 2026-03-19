@@ -5,7 +5,7 @@ let chaiHttp = require("chai-http");
 
 // Assertion
 chai.should();
-chai.use(chaiHttp.default);
+chai.use(chaiHttp);
 
 describe('Countries API Suite', () => {
 
