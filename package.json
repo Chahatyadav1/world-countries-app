@@ -22,7 +22,7 @@
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {
-    "chai": "*",
+    "chai": "^4.4.1",
     "chai-http": "^5.1.2",
     "mocha": "*"
   },
