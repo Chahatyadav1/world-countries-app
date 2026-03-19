@@ -2,6 +2,7 @@ let mongoose = require("mongoose");
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
+let request = chaiHttp.request.execute;
 
 // Assertion
 chai.should();
@@ -13,7 +14,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named India', (done) => {
             let payload = { id: 1 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -26,7 +27,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named United States', (done) => {
             let payload = { id: 2 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -39,7 +40,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Germany', (done) => {
             let payload = { id: 3 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -52,7 +53,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Brazil', (done) => {
             let payload = { id: 4 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -65,7 +66,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Japan', (done) => {
             let payload = { id: 5 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -78,7 +79,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Australia', (done) => {
             let payload = { id: 6 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -91,7 +92,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named South Africa', (done) => {
             let payload = { id: 7 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -104,7 +105,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Canada', (done) => {
             let payload = { id: 8 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -117,7 +118,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named France', (done) => {
             let payload = { id: 9 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -130,7 +131,7 @@ describe('Countries API Suite', () => {
 
         it('it should fetch a country named Argentina', (done) => {
             let payload = { id: 10 }
-            chai.request(server)
+            request(server)
                 .post('/country')
                 .send(payload)
                 .end((err, res) => {
@@ -150,7 +151,7 @@ describe('Testing Other Endpoints', () => {
 
     describe('it should fetch OS Details', () => {
         it('it should fetch OS details', (done) => {
-            chai.request(server)
+            request(server)
                 .get('/os')
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -161,7 +162,7 @@ describe('Testing Other Endpoints', () => {
 
     describe('it should fetch Live Status', () => {
         it('it checks Liveness endpoint', (done) => {
-            chai.request(server)
+            request(server)
                 .get('/live')
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -173,7 +174,7 @@ describe('Testing Other Endpoints', () => {
 
     describe('it should fetch Ready Status', () => {
         it('it checks Readiness endpoint', (done) => {
-            chai.request(server)
+            request(server)
                 .get('/ready')
                 .end((err, res) => {
                     res.should.have.status(200);
