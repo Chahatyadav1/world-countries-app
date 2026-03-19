@@ -24,7 +24,7 @@
   "devDependencies": {
     "chai": "*",
     "chai-http": "^5.1.2",
-    "mocha": "*"
+    "mocha": "^10.7.3"
   },
   "overrides": {
     "serialize-javascript": ">=7.0.3",
