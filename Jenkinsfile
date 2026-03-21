@@ -113,13 +113,11 @@ pipeline {
             steps {
                 sh '''
                     trivy image chahatyadav1/world-countries:$GIT_COMMIT \
-                        --download-db-only \
                         --severity LOW,MEDIUM,HIGH \
                         --exit-code 0 \
                         --format json -o trivy-image-MEDIUM-results.json
 
                     trivy image chahatyadav1/world-countries:$GIT_COMMIT \
-                        --download-db-only \
                         --severity CRITICAL \
                         --exit-code 1 \
                         --format json -o trivy-image-CRITICAL-results.json
