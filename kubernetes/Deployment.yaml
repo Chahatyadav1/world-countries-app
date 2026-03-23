@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: world-countries
+  name: world-countries
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: world-countries
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: world-countries
+    spec:
+      containers:
+      - image: chahatyadav1/world-countries:1
+        name: world-countries
+        resources: {}
+status: {}
