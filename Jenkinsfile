@@ -144,11 +144,8 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'docker-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-creds',usernameVariable: 'DOCKER_USER',passwordVariable: 'DOCKER_PASS')])   
+                {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push chahatyadav1/world-countries:$GIT_COMMIT
@@ -157,20 +154,58 @@ pipeline {
             }
         }
 
-        stage('Deploy - AWS EC2') {
-            when { branch 'feature/*' }
+        stage('K8S - Update Image Tag') {
+            when {
+                branch 'PR*'
+            }
             steps {
-                sh 'sleep 5s'
+                sh 'git clone -b main https://github.com/Chahatyadav1/world-countries-app.git'
+                dir("world-countries-app/kubernetes") {
+                    withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
+                        sh '''
+                            git checkout main
+                            git checkout -b feature-$BUILD_ID
+                            sed -i "s#chahatyadav1/world-countries:*#chahatyadav1/world-countries:$GIT_COMMIT#g" deployment.yaml
+                            cat deployment.yaml 
+
+                            git config --global user.email "chahatyadav@gmail.com"
+                            git config --global user.name "Chahat Yadav"
+                            git remote set-url origin https://$GITHUB_TOKEN@github.com/Chahatyadav1/world-countries-app.git
+                            git add .
+                            git commit -am "Updated docker image"
+                            git push -u origin feature-$BUILD_ID
+                        '''
+                    }
+                }
             }
         }
 
-        stage('Integration Testing - AWS EC2') {
-            when { branch 'feature/*' }
+        stage('K8S - Raise PR') {
+            when {
+                branch 'PR*'
+            }
             steps {
-                sh 'printenv | grep -i branch'
-                withAWS(credentials: 'aws-s3-ec2-lambda-creds', region: 'us-east-2') {
-                    sh 'bash integration-testing-ec2.sh'
+                withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        gh auth login --with-token <<< $GITHUB_TOKEN
+
+                        gh pr create \
+                            --repo Chahatyadav1/world-countries-app \
+                            --title "Updated Docker Image Tag - Build $BUILD_ID" \
+                            --body "this PR is generate to update the docker image tag" \
+                            --head feature-$BUILD_ID \
+                            --base main
+                    '''
                 }
+            }
+        }
+
+        stage('Manual approval') {
+            when {
+                branch 'PR*'
+            }
+            steps {
+                input cancel: 'cancel approval', message: 'is PR is merge , argocd is deployed and synced ? ', ok: 'yes ! lets move to production'
             }
         }
     }
