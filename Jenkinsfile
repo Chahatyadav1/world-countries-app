@@ -168,7 +168,7 @@ pipeline {
                     withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git checkout main
-                            git checkout -b feature-$BUILD_ID
+                            git checkout -b dev
                             sed -i "s#chahatyadav1/world-countries:*#chahatyadav1/world-countries:$GIT_COMMIT#g" deployment.yaml
                             cat deployment.yaml
 
@@ -177,7 +177,7 @@ pipeline {
                             git remote set-url origin https://$GITHUB_TOKEN@github.com/Chahatyadav1/world-countries-app.git
                             git add .
                             git commit -am "Updated docker image"
-                            git push -u origin feature-$BUILD_ID
+                            git push -u origin dev
                         '''
                     }
                 }
