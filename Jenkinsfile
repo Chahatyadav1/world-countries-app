@@ -189,8 +189,6 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
                     sh '''
-                        gh auth login --with-token <<< $GITHUB_TOKEN
-
                         gh pr create \
                             --repo Chahatyadav1/world-countries-app \
                             --title "Updated Docker Image Tag - Build $BUILD_ID" \
@@ -213,7 +211,6 @@ pipeline {
             when { branch 'main' }
             steps {
                 echo "Running post-merge production verification..."
-                // Add smoke tests or ArgoCD sync status check here
                 sh 'echo "Production deploy verified for commit $GIT_COMMIT"'
             }
         }
