@@ -11,6 +11,6 @@ spec:
     targetPort: 3000
   selector:
     app: world-countries
-  type: nodePort
+  type: NodePort
 status:
   loadBalancer: {}
