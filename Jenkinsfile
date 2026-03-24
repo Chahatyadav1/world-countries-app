@@ -73,9 +73,6 @@ pipeline {
             when { branch 'dev' }
             options { retry(2) }
             steps {
-                sh 'echo Colon-Separated - $MONGO_DB_CREDS'
-                sh 'echo Username - $MONGO_DB_CREDS_USR'
-                sh 'echo Password - $MONGO_DB_CREDS_PSW'
                 sh 'npm test'
             }
         }
@@ -111,7 +108,6 @@ pipeline {
         stage('Build Docker Image') {
             when { branch 'dev' }
             steps {
-                sh 'printenv'
                 sh 'docker build -t chahatyadav1/world-countries:$GIT_COMMIT .'
             }
         }
