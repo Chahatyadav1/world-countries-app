@@ -16,7 +16,7 @@ spec:
         app: world-countries
     spec:
       containers:
-      - image: chahatyadav1/world-countries:1
+      - image: chahatyadav1/world-countries:b05d11aaeb416b1e89809c7405ad918871259d5f
         name: world-countries
         resources: {}
 status: {}
