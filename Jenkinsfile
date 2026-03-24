@@ -193,7 +193,7 @@ pipeline {
                             --repo Chahatyadav1/world-countries-app \
                             --title "Updated Docker Image Tag - Build $BUILD_ID" \
                             --body "This PR updates the docker image tag for build $BUILD_ID" \
-                            --head feature-$BUILD_ID \
+                            --head dev \
                             --base main
                     '''
                 }
