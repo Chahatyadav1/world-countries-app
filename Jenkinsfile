@@ -30,6 +30,7 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
+
         stage('Dependency Scanning') {
             when { branch 'dev' }
             parallel {
@@ -91,6 +92,7 @@ pipeline {
                 }
             }
         }
+
         stage('SAST - SonarQube') {
             when { branch 'dev' }
             steps {
@@ -163,13 +165,17 @@ pipeline {
         stage('K8S - Update Image Tag') {
             when { branch 'dev' }
             steps {
+                // Pre-clean to avoid clone conflict on re-runs
+                sh 'rm -rf ${WORKSPACE}/world-countries-app || true'
                 sh 'git clone -b main https://github.com/Chahatyadav1/world-countries-app.git'
                 dir("world-countries-app/kubernetes") {
                     withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                             git checkout main
                             git checkout -b dev
-                            sed -i "s#chahatyadav1/world-countries:*#chahatyadav1/world-countries:$GIT_COMMIT#g" deployment.yaml
+
+                            # macOS-compatible sed with proper regex and quote alternation
+                            sed -i '' 's#chahatyadav1/world-countries:[^[:space:]]*#chahatyadav1/world-countries:'"$GIT_COMMIT"'#g' deployment.yaml
                             cat deployment.yaml
 
                             git config --global user.email "chahatyadav@gmail.com"
@@ -177,6 +183,9 @@ pipeline {
                             git remote set-url origin https://$GITHUB_TOKEN@github.com/Chahatyadav1/world-countries-app.git
                             git add .
                             git commit -am "Updated docker image"
+
+                            # Delete remote dev branch if exists to avoid non-fast-forward rejection
+                            git push origin --delete dev || true
                             git push -u origin dev
                         '''
                     }
@@ -203,7 +212,7 @@ pipeline {
         stage('Manual Approval') {
             when { branch 'main' }
             steps {
-                input(cancel: 'Cancel',message: 'Is the PR merged, ArgoCD deployed and synced?',ok: 'Yes — ship to production')
+                input(cancel: 'Cancel', message: 'Is the PR merged, ArgoCD deployed and synced?', ok: 'Yes — ship to production')
             }
         }
 
@@ -218,6 +227,7 @@ pipeline {
 
     post {
         always {
+            sh 'rm -rf ${WORKSPACE}/world-countries-app || true'
             junit allowEmptyResults: true, testResults: 'test-results.xml'
             junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
             junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
