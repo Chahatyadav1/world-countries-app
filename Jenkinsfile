@@ -165,7 +165,6 @@ pipeline {
         stage('K8S - Update Image Tag') {
             when { branch 'dev' }
             steps {
-                // Pre-clean to avoid clone conflict on re-runs
                 sh 'rm -rf ${WORKSPACE}/world-countries-app || true'
                 sh 'git clone -b main https://github.com/Chahatyadav1/world-countries-app.git'
                 dir("world-countries-app/kubernetes") {
