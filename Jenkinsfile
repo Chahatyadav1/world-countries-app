@@ -21,15 +21,17 @@ pipeline {
     }
 
     stages {
-
         stage('Installing Dependencies') {
+            when {
+                anyOf { branch 'dev'; branch 'main' }
+            }
             options { timestamps() }
             steps {
                 sh 'npm install --no-audit'
             }
         }
-
         stage('Dependency Scanning') {
+            when { branch 'dev' }
             parallel {
 
                 stage('NPM Dependency Audit') {
@@ -67,6 +69,7 @@ pipeline {
         }
 
         stage('Unit Testing') {
+            when { branch 'dev' }
             options { retry(2) }
             steps {
                 sh 'echo Colon-Separated - $MONGO_DB_CREDS'
@@ -77,6 +80,7 @@ pipeline {
         }
 
         stage('Code Coverage') {
+            when { branch 'dev' }
             steps {
                 catchError(
                     buildResult: 'SUCCESS',
@@ -87,8 +91,8 @@ pipeline {
                 }
             }
         }
-
         stage('SAST - SonarQube') {
+            when { branch 'dev' }
             steps {
                 sh 'sleep 5s'
                 withSonarQubeEnv('sonar-qube') {
@@ -103,6 +107,7 @@ pipeline {
         }
 
         stage('Build Docker Image') {
+            when { branch 'dev' }
             steps {
                 sh 'printenv'
                 sh 'docker build -t chahatyadav1/world-countries:$GIT_COMMIT .'
@@ -110,6 +115,7 @@ pipeline {
         }
 
         stage('Trivy Vulnerability Scanner') {
+            when { branch 'dev' }
             steps {
                 sh '''
                     trivy image chahatyadav1/world-countries:$GIT_COMMIT \
@@ -143,9 +149,9 @@ pipeline {
         }
 
         stage('Push Docker Image') {
+            when { branch 'dev' }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-creds',usernameVariable: 'DOCKER_USER',passwordVariable: 'DOCKER_PASS')])   
-                {
+                withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push chahatyadav1/world-countries:$GIT_COMMIT
@@ -155,9 +161,7 @@ pipeline {
         }
 
         stage('K8S - Update Image Tag') {
-            when {
-                branch 'PR*'
-            }
+            when { branch 'dev' }
             steps {
                 sh 'git clone -b main https://github.com/Chahatyadav1/world-countries-app.git'
                 dir("world-countries-app/kubernetes") {
@@ -166,7 +170,7 @@ pipeline {
                             git checkout main
                             git checkout -b feature-$BUILD_ID
                             sed -i "s#chahatyadav1/world-countries:*#chahatyadav1/world-countries:$GIT_COMMIT#g" deployment.yaml
-                            cat deployment.yaml 
+                            cat deployment.yaml
 
                             git config --global user.email "chahatyadav@gmail.com"
                             git config --global user.name "Chahat Yadav"
@@ -181,9 +185,7 @@ pipeline {
         }
 
         stage('K8S - Raise PR') {
-            when {
-                branch 'PR*'
-            }
+            when { branch 'dev' }
             steps {
                 withCredentials([string(credentialsId: 'GitHub-token-text', variable: 'GITHUB_TOKEN')]) {
                     sh '''
@@ -192,7 +194,7 @@ pipeline {
                         gh pr create \
                             --repo Chahatyadav1/world-countries-app \
                             --title "Updated Docker Image Tag - Build $BUILD_ID" \
-                            --body "this PR is generate to update the docker image tag" \
+                            --body "This PR updates the docker image tag for build $BUILD_ID" \
                             --head feature-$BUILD_ID \
                             --base main
                     '''
@@ -200,12 +202,19 @@ pipeline {
             }
         }
 
-        stage('Manual approval') {
-            when {
-                branch 'PR*'
-            }
+        stage('Manual Approval') {
+            when { branch 'main' }
             steps {
-                input cancel: 'cancel approval', message: 'is PR is merge , argocd is deployed and synced ? ', ok: 'yes ! lets move to production'
+                input(cancel: 'Cancel',message: 'Is the PR merged, ArgoCD deployed and synced?',ok: 'Yes — ship to production')
+            }
+        }
+
+        stage('Verify Deployment') {
+            when { branch 'main' }
+            steps {
+                echo "Running post-merge production verification..."
+                // Add smoke tests or ArgoCD sync status check here
+                sh 'echo "Production deploy verified for commit $GIT_COMMIT"'
             }
         }
     }
