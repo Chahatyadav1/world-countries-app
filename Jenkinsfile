@@ -172,8 +172,6 @@ pipeline {
                         sh '''
                             git checkout main
                             git checkout -b dev
-
-                            # macOS-compatible sed with proper regex and quote alternation
                             sed -i '' 's#chahatyadav1/world-countries:[^[:space:]]*#chahatyadav1/world-countries:'"$GIT_COMMIT"'#g' deployment.yaml
                             cat deployment.yaml
 
@@ -182,8 +180,6 @@ pipeline {
                             git remote set-url origin https://$GITHUB_TOKEN@github.com/Chahatyadav1/world-countries-app.git
                             git add .
                             git commit -am "Updated docker image"
-
-                            # Delete remote dev branch if exists to avoid non-fast-forward rejection
                             git push origin --delete dev || true
                             git push -u origin dev
                         '''
