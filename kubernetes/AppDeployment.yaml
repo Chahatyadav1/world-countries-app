@@ -16,7 +16,7 @@ spec:
         app: world-countries
     spec:
       containers:
-      - image: chahatyadav1/world-countries:5166ce176200e2bd93c661187564513b07151b36
+      - image: chahatyadav1/world-countries:f1f4d2d2c4d1d375970b120d51ae044509f7d380
         name: world-countries
         ports:
         - containerPort: 3000
