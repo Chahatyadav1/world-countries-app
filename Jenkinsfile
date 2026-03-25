@@ -219,10 +219,6 @@ pipeline {
     post {
         always {
             sh 'rm -rf ${WORKSPACE}/world-countries-app || true'
-            junit allowEmptyResults: true, testResults: 'test-results.xml'
-            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
-            junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
-            junit allowEmptyResults: true, testResults: 'trivy-image-MEDIUM-results.xml'
         }
     }
 }
