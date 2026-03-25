@@ -168,8 +168,8 @@ pipeline {
                         sh '''
                             git checkout main
                             git checkout -b dev
-                            sed -i '' 's#chahatyadav1/world-countries:[^[:space:]]*#chahatyadav1/world-countries:'"$GIT_COMMIT"'#g' deployment.yaml
-                            cat deployment.yaml
+                            sed -i '' 's#chahatyadav1/world-countries:[^[:space:]]*#chahatyadav1/world-countries:'"$GIT_COMMIT"'#g' AppDeployment.yaml
+                            cat AppDeployment.yaml
 
                             git config --global user.email "chahatyadav@gmail.com"
                             git config --global user.name "Chahat Yadav"
