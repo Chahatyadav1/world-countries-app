@@ -9,10 +9,13 @@
     "test:ci": "NODE_ENV=test mocha app-test.js --timeout 10000 --reporter xunit --reporter-options output=./test-results.xml --exit",
     "coverage": "NODE_ENV=test nyc --reporter cobertura --reporter lcov --reporter text --reporter json-summary mocha app-test.js --timeout 10000 --reporter xunit --reporter-options output=./test-results.xml --exit"
   },
-  "nyc": {
-    "check-coverage": true,
-    "lines": 60
-  },
+"nyc": {
+  "check-coverage": true,
+  "lines": 60,
+  "functions": 45,
+  "branches": 30,
+  "statements": 60
+},
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
