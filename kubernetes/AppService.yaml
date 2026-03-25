@@ -11,6 +11,4 @@ spec:
     targetPort: 3000
   selector:
     app: world-countries
-  type: NodePort
-status:
-  loadBalancer: {}
+  type: ClusterIP
