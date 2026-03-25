@@ -33,10 +33,10 @@ if (process.env.NODE_ENV !== 'test') {
         pass: process.env.MONGO_PASSWORD,
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }, function(err) {
-        if (err) {
-            console.log("error!! " + err);
-        }
+    }).then(() => {
+        console.log("MongoDB connected successfully");
+    }).catch((err) => {
+        console.log("error!! " + err);
     });
 }
 
@@ -60,13 +60,9 @@ app.post('/country', function(req, res) {
         return res.status(404).json({ error: 'Country not found' });
     }
 
-    countryModel.findOne({ id: req.body.id }, function(err, countryData) {
-        if (err) {
-            res.send("Error in Country Data");
-        } else {
-            res.send(countryData);
-        }
-    });
+    countryModel.findOne({ id: req.body.id })
+        .then((countryData) => { res.send(countryData); })
+        .catch(() => { res.send("Error in Country Data"); });
 });
 
 app.get('/', async (req, res) => {
