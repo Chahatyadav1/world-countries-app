@@ -174,8 +174,8 @@ pipeline {
                             git config --global user.email "chahatyadav@gmail.com"
                             git config --global user.name "Chahat Yadav"
                             git remote set-url origin https://$GITHUB_TOKEN@github.com/Chahatyadav1/world-countries-app.git
-                            git add .
-                            git commit -am "Updated docker image"
+                            git add AppDeployment.yaml
+                            git diff --cached --quiet || git commit -m "Updated docker image"
                             git push origin --delete dev || true
                             git push -u origin dev
                         '''
