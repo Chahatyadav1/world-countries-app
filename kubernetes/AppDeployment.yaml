@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: world-countries
+  name: world-countries
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: world-countries
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: world-countries
+    spec:
+      containers:
+      - image: chahatyadav1/world-countries:latest
+        name: world-countries
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: world-countries-secret
+              key: MONGO_URI
+        - name: MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: world-countries-secret
+              key: MONGO_USERNAME
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: world-countries-secret
+              key: MONGO_PASSWORD
+        resources: {}
+status: {}
