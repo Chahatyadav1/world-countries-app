@@ -119,11 +119,13 @@ pipeline {
                     trivy image chahatyadav1/world-countries:$GIT_COMMIT \
                         --severity LOW,MEDIUM,HIGH \
                         --exit-code 0 \
+                        --quiet \
                         --format json -o trivy-image-MEDIUM-results.json
 
                     trivy image chahatyadav1/world-countries:$GIT_COMMIT \
                         --severity CRITICAL \
                         --exit-code 1 \
+                        --quiet \
                         --format json -o trivy-image-CRITICAL-results.json
                 '''
             }
@@ -219,10 +221,10 @@ pipeline {
     post {
         always {
             sh 'rm -rf ${WORKSPACE}/world-countries-app || true'
-            junit allowEmptyResults: true, testResults: 'test-results.xml'
-            junit allowEmptyResults: true, testResults: 'dependency-check-junit.xml'
-            junit allowEmptyResults: true, testResults: 'trivy-image-CRITICAL-results.xml'
-            junit allowEmptyResults: true, testResults: 'trivy-image-MEDIUM-results.xml'
+
+            junit allowEmptyResults: true, skipPublishingChecks: true,testResults: 'dependency-check-junit.xml'
+            junit allowEmptyResults: true, skipPublishingChecks: true,testResults: 'trivy-image-CRITICAL-results.xml'
+            junit allowEmptyResults: true, skipPublishingChecks: true,testResults: 'trivy-image-MEDIUM-results.xml'
         }
     }
 }
