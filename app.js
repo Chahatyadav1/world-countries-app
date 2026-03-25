@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors());
 
-// In-memory country data — used in test mode (NODE_ENV=test)
 const countriesData = [
     { id: 1,  name: 'India',         capital: 'New Delhi',     population: '1.4 billion', continent: 'Asia',          currency: 'Indian Rupee' },
     { id: 2,  name: 'United States', capital: 'Washington DC', population: '331 million', continent: 'North America', currency: 'US Dollar' },
@@ -26,7 +25,6 @@ const countriesData = [
     { id: 10, name: 'Argentina',     capital: 'Buenos Aires',  population: '46 million',  continent: 'South America', currency: 'Argentine Peso' }
 ];
 
-// MongoDB connection — skipped in test mode
 if (process.env.NODE_ENV !== 'test') {
     mongoose.connect(process.env.MONGO_URI, {
         user: process.env.MONGO_USERNAME,
@@ -99,5 +97,4 @@ app.listen(3000, () => {
     console.log("Server successfully running on port - 3000");
 });
 
-module.exports = app;  // Required for chai-http to call app.address()
-//module.exports.handler = serverless(app);
+module.exports = app;  
