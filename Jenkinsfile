@@ -73,7 +73,7 @@ pipeline {
             when { branch 'dev' }
             options { retry(2) }
             steps {
-                sh 'npm test'
+                sh 'npm test:ci'
             }
         }
 
