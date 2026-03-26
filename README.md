@@ -35,7 +35,7 @@
 
 | Pipeline-dev | Pipeline-main | ArgoCD | Grafana | Slack | App-UI | Sonar-Qube |
 |--------------|---------------|---------|--------|-------|--------|------------|
-| ![pipeline](images/pipeline-dev.png) |  ![pipeline](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) | ![app-ui](images.app-ui.png) | ![sonar-qube](sonar-qube.png) |
+| ![pipeline](images/pipeline-dev.png) |  ![pipeline](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) | ![app-ui](images/app-ui.png) | ![sonar-qube](images/sonar-qube.png) |
 
 ---
 
