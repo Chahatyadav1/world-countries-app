@@ -35,7 +35,7 @@
 
 | Pipeline | ArgoCD | Grafana | Slack |
 |----------|--------|---------|--------|
-| ![pipeline](images/pipeline.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack] (images/slack.png) |
+| ![pipeline](images/pipeline.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) |
 
 ---
 
