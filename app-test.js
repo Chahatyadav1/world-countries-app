@@ -4,7 +4,7 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 
 chai.use(chaiHttp);
-chai.should(); // enables res.should.have.status() on all objects
+chai.should(); 
 
 describe('Countries API Suite', () => {
 
