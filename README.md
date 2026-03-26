@@ -33,8 +33,8 @@
 > - `app-ui.png` — The running frontend (index.html)
 > - `trivy-report.png` — Trivy vulnerability scan results
 
-| Pipeline | ArgoCD | Grafana |
-|----------|--------|---------|
+| Pipeline | ArgoCD | Grafana | Slack |
+|----------|--------|---------|--------|
 | ![pipeline](images/pipeline.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack] (images/slack.png) |
 
 ---
@@ -165,9 +165,6 @@ Deployed via Helm with custom values. Monitors:
 | Alert | Severity | Trigger |
 |-------|----------|---------|
 | `ArgoCDAppOutOfSync` | Warning | ArgoCD app out-of-sync for > 5 min |
-| `ArgoCDAppUnhealthy` | Critical | ArgoCD app health degraded |
-| `HighErrorRate` | Critical | HTTP 5xx rate > 5% for 5 min |
-| `PodCrashLooping` | Critical | Pod restart count > 5 |
 
 ### Grafana Dashboard
 
