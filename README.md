@@ -22,8 +22,6 @@
 ---
 
 ## 📸 Screenshots
-
-> 💡 **Tip:** Add screenshots in this section for maximum GitHub impact.
 > Suggested images to capture and drop into `docs/images/`:
 > - `pipeline-overview.png` — Jenkins Blue Ocean full pipeline view
 > - `argocd-dashboard.png` — ArgoCD app sync view (green ✅)
