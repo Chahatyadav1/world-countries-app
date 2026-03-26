@@ -35,7 +35,7 @@
 
 | Pipeline | ArgoCD | Grafana |
 |----------|--------|---------|
-| ![pipeline](docs/images/pipeline-overview.png) | ![argocd](https://drive.google.com/file/d/1x4YO1gIH8H8LAMk7kDYgQ0Sz3NV5reVW/view?usp=share_link) | ![grafana](docs/images/grafana-dashboard.png) |
+| ![pipeline](images/pipeline.png) | ![argocd]() | ![grafana](docs/images/grafana-dashboard.png) |
 
 ---
 
