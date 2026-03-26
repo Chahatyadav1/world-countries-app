@@ -33,9 +33,9 @@
 > - `app-ui.png` — The running frontend (index.html)
 > - `trivy-report.png` — Trivy vulnerability scan results
 
-| Pipeline-dev | Pipeline-main | ArgoCD | Grafana | Slack |
-|--------------|---------------|---------|--------|-------|
-| ![pipeline](images/pipeline-dev.png) |  ![pipeline](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) |
+| Pipeline-dev | Pipeline-main | ArgoCD | Grafana | Slack | App-UI | Sonar-Qube |
+|--------------|---------------|---------|--------|-------|--------|------------|
+| ![pipeline](images/pipeline-dev.png) |  ![pipeline](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) | ![app-ui](images.app-ui.png) | ![sonar-qube](sonar-qube.png) |
 
 ---
 
