@@ -361,20 +361,6 @@ Setup:
 
 ## ⚡ Production Recommendations
 
-> Things worth improving before going to real production:
-
-- [ ] **Replace `Secret.yaml` with [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets)** or External Secrets Operator — never commit plaintext secrets
-- [ ] **Add Kubernetes resource `limits`** to `AppDeployment.yaml` (currently empty `resources: {}`)
-- [ ] **Add liveness/readiness probes** to `AppDeployment.yaml` using `/live` and `/ready` endpoints
-- [ ] **Use a PersistentVolumeClaim** for MongoDB instead of ephemeral container storage
-- [ ] **Enable SonarQube Quality Gate** webhook to block the pipeline on gate failure
-- [ ] **Add Ingress** with TLS (cert-manager + Let's Encrypt) instead of ClusterIP only
-- [ ] **Pin the `mongo` image tag** in `MongoDeployment.yaml` (e.g., `mongo:7.0`) — `latest` is unpredictable
-- [ ] **Implement RBAC** with least-privilege ServiceAccounts for each workload
-- [ ] **Add HorizontalPodAutoscaler** for the app deployment
-
----
-
 ## 📊 Tech Stack
 
 | Layer | Technology |
