@@ -32,8 +32,8 @@ spec:
               key: MONGO_PASSWORD
         resources:
           requests:
-            memory: "60Mi"
-            cpu: "50m"
+            memory: "260Mi"
+            cpu: "250m"
           limits:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "512Mi"
+            cpu: "500m"
