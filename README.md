@@ -15,67 +15,60 @@
 
 **A production-grade Node.js REST API with a complete DevSecOps pipeline — from commit to Kubernetes, fully automated.**
 
-[Live Demo](#) · [API Docs](#api-endpoints) · [Pipeline Overview](#cicd-pipeline)
+[API Docs](#-api-endpoints) · [Pipeline Overview](#-cicd-pipeline) · [Local Setup](#️-local-development)
 
 </div>
 
 ---
 
 ## 📸 Screenshots
-> - `pipeline-overview.png` — Jenkins Blue Ocean full pipeline view
-> - `argocd-dashboard.png` — ArgoCD app sync view (green ✅)
-> - `grafana-dashboard.png` — Grafana monitoring dashboard
-> - `sonar-report.png` — SonarQube quality gate passed
-> - `slack-notification.png` — ArgoCD Slack alert in channel
-> - `app-ui.png` — The running frontend (index.html)
-> - `trivy-report.png` — Trivy vulnerability scan results
 
-| Pipeline-dev | Pipeline-main | ArgoCD | Grafana | Slack | App-UI | Sonar-Qube |
-|--------------|---------------|---------|--------|-------|--------|------------|
-| ![pipeline](images/pipeline-dev.png) |  ![pipeline](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) | ![app-ui](images/app-ui.png) | ![sonar-qube](images/sonar-qube.png) |
+| Pipeline (dev) | Pipeline (main) | ArgoCD | Grafana | Slack | App UI | SonarQube |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| ![pipeline-dev](images/pipeline-dev.png) | ![pipeline-main](images/pipeline-main.png) | ![argocd](images/argocd.png) | ![grafana](images/grafana-dashboard.png) | ![slack](images/slack.png) | ![app-ui](images/app-ui.png) | ![sonar](images/sonar-qube.png) |
 
 ---
 
 ## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Developer Workstation                         │
-│                    git push → GitHub (dev branch)                    │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │ Webhook
-                               ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                          Jenkins CI Server                           │
-│                                                                      │
-│  Install Deps → Dep Scan (NPM Audit + OWASP) → Unit Tests           │
-│      → Code Coverage → SAST (SonarQube) → Docker Build              │
-│      → Trivy Image Scan → Push to DockerHub                         │
-│      → Update K8s Manifest → Raise PR to main                       │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │ PR Merge to main
-                               ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                      ArgoCD (GitOps Controller)                      │
-│   Watches GitHub main branch → Detects manifest change              │
-│   → Syncs Kubernetes cluster → Sends Slack notification             │
-└──────────────────────────────┬──────────────────────────────────────┘
-                               │
-                               ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Kubernetes Cluster                            │
-│                                                                      │
-│  ┌──────────────────────┐     ┌───────────────────────────────────┐ │
-│  │   world-countries    │     │            MongoDB                │ │
-│  │   Deployment (x2)    │────▶│         Deployment (x1)           │ │
-│  │   Port: 3000         │     │         Port: 27017               │ │
-│  └──────────┬───────────┘     └───────────────────────────────────┘ │
-│             │                                                        │
-│  ┌──────────▼───────────┐     ┌───────────────────────────────────┐ │
-│  │   ClusterIP Service  │     │    Prometheus + Grafana Stack     │ │
-│  │   Port: 8080 → 3000  │     │    (kube-prometheus-stack)        │ │
-│  └──────────────────────┘     └───────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                        Developer Workstation                          │
+│                    git push → GitHub (dev branch)                     │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │ Webhook
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                          Jenkins CI Server                            │
+│                                                                       │
+│  Install Deps → Dep Scan (NPM Audit + OWASP) → Unit Tests            │
+│      → Code Coverage → SAST (SonarQube) → Docker Build               │
+│      → Trivy Image Scan → Push to DockerHub                          │
+│      → Update K8s Manifest → Raise PR to main                        │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │ PR Merge to main
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                      ArgoCD (GitOps Controller)                       │
+│   Watches GitHub main branch → Detects manifest change               │
+│   → Syncs Kubernetes cluster → Sends Slack notification              │
+└───────────────────────────────┬──────────────────────────────────────┘
+                                │
+                                ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                        Kubernetes Cluster                             │
+│                                                                       │
+│  ┌───────────────────────┐     ┌──────────────────────────────────┐  │
+│  │   world-countries     │     │           MongoDB                │  │
+│  │   Deployment (x2)     │────▶│        Deployment (x1)           │  │
+│  │   Port: 3000          │     │        Port: 27017               │  │
+│  └───────────┬───────────┘     └──────────────────────────────────┘  │
+│              │                                                        │
+│  ┌───────────▼───────────┐     ┌──────────────────────────────────┐  │
+│  │   ClusterIP Service   │     │   Prometheus + Grafana Stack     │  │
+│  │   Port: 8080 → 3000   │     │   (kube-prometheus-stack)        │  │
+│  └───────────────────────┘     └──────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -85,8 +78,59 @@
 - **REST API** — Query world countries data (name, capital, population, continent, currency)
 - **MongoDB** — Persistent data layer with auto-seeding on first boot
 - **Health Endpoints** — `/live` and `/ready` for Kubernetes liveness/readiness probes
-- **API Documentation** — OpenAPI 3.0 spec at `/api-docs`
+- **API Documentation** — OpenAPI 3.0 spec served at `/api-docs`
 - **Full CI/CD** — Zero-touch delivery from `git push` to production
+
+---
+
+## 📂 Project Structure
+
+```
+world-countries-app/
+│
+├── app.js                              # Express server & REST API logic
+├── app-test.js                         # Mocha + Chai unit test suite
+├── index.html                          # Frontend UI (country lookup)
+├── oas.json                            # OpenAPI 3.0 specification
+├── Dockerfile                          # Node.js 20-Alpine container image
+├── Jenkinsfile                         # Declarative Jenkins CI/CD pipeline
+├── package.json                        # npm metadata, scripts & dependencies
+├── package-lock.json                   # Locked dependency tree
+├── dependency-check-suppression.xml    # OWASP false-positive suppressions
+├── zap_ignore_rules                    # OWASP ZAP scan ignore rules
+│
+├── images/                             # Screenshots used in README
+│   ├── app-ui.png
+│   ├── pipeline-dev.png
+│   ├── pipeline-main.png
+│   ├── argocd.png
+│   ├── grafana-dashboard.png
+│   ├── slack.png
+│   └── sonar-qube.png
+│
+├── trivy-templates/                    # Custom Trivy report templates
+│   ├── html.tpl                        # HTML vulnerability report
+│   └── junit.tpl                       # JUnit XML report (for Jenkins)
+│
+├── kubernetes/                         # Kubernetes manifests
+│   ├── AppDeployment.yaml              # App Deployment — 2 replicas, pulls from DockerHub
+│   ├── AppService.yaml                 # ClusterIP Service (port 8080 → 3000)
+│   ├── MongoDeployment.yaml            # MongoDB Deployment (single replica)
+│   ├── MongoService.yaml               # MongoDB ClusterIP Service (port 27017)
+│   ├── Secret.yaml                     # K8s Secret — MONGO_URI, USERNAME, PASSWORD
+│   └── selaed-secret.cert              # Sealed Secrets public certificate
+│
+├── Argocd/                             # ArgoCD GitOps manifests
+│   ├── application-dev.yaml            # ArgoCD Application — dev branch → prod namespace
+│   ├── application-prod.yaml           # ArgoCD Application — main branch → prod namespace
+│   ├── notification-cm.yaml            # Slack notification ConfigMap
+│   ├── notification-secret.yaml        # ArgoCD notifications Slack token secret
+│   ├── service-monitor.yaml            # Prometheus ServiceMonitor CRD
+│   └── sealed-secret.cert              # Sealed Secrets certificate (ArgoCD copy)
+│
+└── prometheus/
+    └── prometheus-rule.yaml            # PrometheusRule — ArgoCDAppOutOfSync alert
+```
 
 ---
 
@@ -95,10 +139,13 @@
 | Stage | Tool | What It Checks |
 |-------|------|----------------|
 | Dependency Audit | `npm audit` | Known CVEs in npm packages |
-| Dependency Check | OWASP Dependency-Check | CVE database scan with NVD API |
+| Dependency Check | OWASP Dependency-Check | Full CVE database scan via NVD API |
 | SAST | SonarQube | Code quality, bugs, security hotspots |
-| Container Scan | Trivy | OS + library CVEs in Docker image |
-| Secret Detection | `.gitignore` + K8s Secrets | No plaintext credentials in repo |
+| Container Scan | Trivy | OS + library CVEs inside the Docker image |
+| Secret Management | K8s Secrets + Sealed Secrets | Encrypted secrets in Git (no plaintext) |
+| **Secrets (Planned)** | **HashiCorp Vault** | **Dynamic secrets, auto-rotation, centralised secret store** |
+
+> 🔒 **Upcoming — HashiCorp Vault Integration:** Kubernetes secrets are currently managed via Sealed Secrets (Bitnami). A future iteration will integrate HashiCorp Vault for dynamic secret injection, automatic credential rotation, and a centralised secret store — eliminating all static secrets from the cluster entirely.
 
 ---
 
@@ -107,42 +154,53 @@
 ### Branch Strategy
 
 ```
-main   ──────────────────────────●─────── Production (ArgoCD deploys)
-                                 ↑ PR Merge
-dev    ─●───●───●───●───●────────           Feature development + CI
+main   ─────────────────────────────●──────  Production (ArgoCD deploys)
+                                    ↑ PR Merge
+dev    ──●───●───●───●───●──────────          Feature development + full CI
 ```
 
 ### Pipeline Stages (Jenkins)
 
 ```
 dev branch:
-  Installing Dependencies
-       ↓
-  Dependency Scanning ─────────────────┐
-  ├─ NPM Dependency Audit              │ (parallel)
-  └─ OWASP Dependency Check ───────────┘
-       ↓
-  Unit Testing  (retry: 2)
-       ↓
-  Code Coverage
-       ↓
-  SAST - SonarQube
-       ↓
-  Build Docker Image
-       ↓
-  Trivy Vulnerability Scanner
-       ↓
-  Push Docker Image → DockerHub
-       ↓
-  K8s - Update Image Tag in manifest
-       ↓
-  K8s - Raise PR (dev → main)
+  ① Installing Dependencies
+        ↓
+  ② Dependency Scanning ──────────────────┐
+     ├─ NPM Dependency Audit              │ (parallel)
+     └─ OWASP Dependency Check ───────────┘
+        ↓
+  ③ Unit Testing  (retry: 2)
+        ↓
+  ④ Code Coverage (NYC / Istanbul)
+        ↓
+  ⑤ SAST — SonarQube
+        ↓
+  ⑥ Build Docker Image
+        ↓
+  ⑦ Trivy Vulnerability Scanner
+        ↓
+  ⑧ Push Docker Image → DockerHub
+        ↓
+  ⑨ K8s — Update Image Tag in manifest
+        ↓
+  ⑩ K8s — Raise PR (dev → main)
 
 main branch (after PR merge):
-  Manual Approval Gate
-       ↓
-  Verify Deployment
+  ⑪ Manual Approval Gate
+        ↓
+  ⑫ Verify Deployment
 ```
+
+### Jenkins Credentials Required
+
+| Credential ID | Type | Used For |
+|---------------|------|----------|
+| `mongo-db-credentials` | Username/Password | MongoDB Atlas (combined) |
+| `mongouser` | Secret Text | MongoDB username env var |
+| `mongopassword` | Secret Text | MongoDB password env var |
+| `nvd-api-key` | Secret Text | OWASP NVD API key |
+| `docker-creds` | Username/Password | DockerHub image push |
+| `GitHub-token-text` | Secret Text | GitHub PR creation via `gh` CLI |
 
 ---
 
@@ -150,7 +208,7 @@ main branch (after PR merge):
 
 ### Prometheus + Grafana (kube-prometheus-stack)
 
-Deployed via Helm with custom values. Monitors:
+Deployed via Helm. Monitors:
 
 - **Application** — HTTP request rate, latency, error rate (via ServiceMonitor)
 - **Kubernetes** — Pod CPU/memory, deployment replica health
@@ -159,53 +217,18 @@ Deployed via Helm with custom values. Monitors:
 
 ### Custom Alerts
 
-| Alert | Severity | Trigger |
-|-------|----------|---------|
-| `ArgoCDAppOutOfSync` | Warning | ArgoCD app out-of-sync for > 5 min |
+| Alert | Severity | Condition |
+|-------|----------|-----------|
+| `ArgoCDAppOutOfSync` | Warning | ArgoCD app out-of-sync for > 5 minutes |
 
-### Grafana Dashboard
+### Grafana Dashboard Panels
 
-Import `grafana/world-countries-dashboard.json` into Grafana.
-
-Panels included:
-- HTTP Request Rate (by endpoint)
+- HTTP Request Rate (per endpoint)
 - P95 Response Latency
 - Error Rate %
 - Pod CPU & Memory Usage
-- ArgoCD Sync/Health Status
+- ArgoCD Sync / Health Status
 - MongoDB Active Connections
-
----
-
-## 📂 Project Structure
-
-```
-world-countries-app/
-├── app.js                          # Express server + REST API
-├── app-test.js                     # Mocha/Chai test suite
-├── index.html                      # Frontend UI
-├── oas.json                        # OpenAPI 3.0 spec
-├── Dockerfile                      # Multi-stage container build
-├── Jenkinsfile                     # Full CI pipeline definition
-├── package.json
-├── dependency-check-suppression.xml
-├── trivy-templates/
-│   ├── html.tpl                    # Trivy HTML report template
-│   └── junit.tpl                   # Trivy JUnit report template
-├── kubernetes/
-│   ├── AppDeployment.yaml          # App Deployment (2 replicas)
-│   ├── AppService.yaml             # ClusterIP Service
-│   ├── MongoDeployment.yaml        # MongoDB Deployment
-│   ├── MongoService.yaml           # MongoDB ClusterIP Service
-│   └── Secret.yaml                 # K8s Secret (⚠️ use Sealed Secrets in prod)
-├── argocd/
-│   ├── application.yaml            # ArgoCD Application manifest
-│   └── notifications-cm.yaml      # ArgoCD Slack notifications
-├── prometheus/
-│   └── alert-rules.yaml            # PrometheusRule CRD
-└── grafana/
-    └── world-countries-dashboard.json  # Importable Grafana dashboard
-```
 
 ---
 
@@ -214,8 +237,8 @@ world-countries-app/
 ### Prerequisites
 
 - Node.js 20+
-- Docker & Docker Compose
-- MongoDB (local or Atlas URI)
+- Docker
+- MongoDB (local instance or Atlas URI)
 
 ### Run Locally
 
@@ -240,14 +263,15 @@ npm start
 ### Run Tests
 
 ```bash
-npm test                  # Run test suite
-npm run coverage          # Run with code coverage report
+npm test              # Mocha unit tests
+npm run coverage      # Tests + NYC code coverage report
 ```
 
 ### Run with Docker
 
 ```bash
 docker build -t world-countries:local .
+
 docker run -p 3000:3000 \
   -e MONGO_URI=mongodb://host.docker.internal:27017 \
   -e MONGO_USERNAME=admin \
@@ -262,13 +286,13 @@ docker run -p 3000:3000 \
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/` | Frontend UI |
-| `POST` | `/country` | Get country by ID `{ "id": 1 }` |
+| `POST` | `/country` | Get country by ID — body: `{ "id": 1 }` |
 | `GET` | `/api-docs` | OpenAPI 3.0 specification |
 | `GET` | `/os` | Hostname + environment info |
 | `GET` | `/live` | Liveness probe |
 | `GET` | `/ready` | Readiness probe |
 
-### Example Request
+### Example
 
 ```bash
 curl -X POST http://localhost:3000/country \
@@ -294,7 +318,7 @@ curl -X POST http://localhost:3000/country \
 ### Apply Manifests Manually
 
 ```bash
-# Create namespace (if needed)
+# Create namespace
 kubectl create namespace world-countries
 
 # Apply secrets first
@@ -316,12 +340,13 @@ kubectl get svc -n world-countries
 ### ArgoCD GitOps Deployment
 
 ```bash
-# Apply the ArgoCD application manifest
-kubectl apply -f argocd/application.yaml -n argocd
+# Apply ArgoCD application manifests
+kubectl apply -f Argocd/application-dev.yaml -n argocd
+kubectl apply -f Argocd/application-prod.yaml -n argocd
 
 # Watch sync status
-argocd app get world-countries
-argocd app sync world-countries
+argocd app get world-countries-prod
+argocd app sync world-countries-prod
 ```
 
 ---
@@ -329,31 +354,24 @@ argocd app sync world-countries
 ## 🔔 Slack Notifications
 
 ArgoCD sends Slack notifications on:
+
 - ✅ Sync **Succeeded**
 - ❌ Sync **Failed**
-- ⚠️ App **Out of Sync** (via Prometheus alert → AlertManager)
+- ⚠️ App **Out of Sync** (via Prometheus → AlertManager)
 
-Setup:
-1. Create a Slack bot and copy the OAuth token
-2. `kubectl create secret generic argocd-notifications-secret --from-literal=slack-token=<YOUR_TOKEN> -n argocd`
-3. `kubectl apply -f argocd/notifications-cm.yaml -n argocd`
+**Setup:**
 
----
+```bash
+# 1. Create a Slack bot and copy the OAuth token
+# 2. Create the ArgoCD notifications secret
+kubectl create secret generic argocd-notifications-secret \
+  --from-literal=slack-token=<YOUR_TOKEN> -n argocd
 
-## 🔧 Jenkins Credentials Required
-
-| Credential ID | Type | Usage |
-|---------------|------|-------|
-| `mongo-db-credentials` | Username/Password | MongoDB Atlas (combined) |
-| `mongouser` | Secret Text | MongoDB username |
-| `mongopassword` | Secret Text | MongoDB password |
-| `nvd-api-key` | Secret Text | OWASP NVD API key |
-| `docker-creds` | Username/Password | DockerHub push |
-| `GitHub-token-text` | Secret Text | GitHub PR creation via `gh` CLI |
+# 3. Apply the notification ConfigMap
+kubectl apply -f Argocd/notification-cm.yaml -n argocd
+```
 
 ---
-
-## ⚡ Production Recommendations
 
 ## 📊 Tech Stack
 
@@ -362,13 +380,14 @@ Setup:
 | Runtime | Node.js 20 on Alpine 3.19 |
 | Framework | Express.js |
 | Database | MongoDB via Mongoose |
-| Containerization | Docker |
+| Containerisation | Docker |
 | Orchestration | Kubernetes |
 | CI | Jenkins (declarative pipeline) |
 | CD / GitOps | ArgoCD |
 | SAST | SonarQube |
 | Image Scanning | Trivy |
 | Dependency Scanning | OWASP Dependency-Check + npm audit |
+| Secret Management | K8s Secrets + Sealed Secrets (Vault — planned) |
 | Monitoring | Prometheus + kube-prometheus-stack |
 | Dashboarding | Grafana |
 | Alerting | AlertManager → Slack |
@@ -379,10 +398,19 @@ Setup:
 
 ---
 
+## 🛣️ Roadmap
+
+- [ ] **HashiCorp Vault** — Dynamic secret injection, auto-rotation, eliminate static K8s Secrets
+- [ ] **Ingress + TLS** — Expose the app with NGINX Ingress + cert-manager
+- [ ] **Horizontal Pod Autoscaler (HPA)** — Auto-scale on CPU/memory metrics
+- [ ] **Multi-environment support** — Dedicated namespaces for dev / staging / prod
+
+---
+
 <div align="center">
 
 Built with ❤️ by [Chahat Yadav](https://github.com/Chahatyadav1)
 
-⭐ If this project helped you, please star it!
+⭐ If this project helped you, please give it a star!
 
 </div>
