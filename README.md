@@ -22,7 +22,6 @@
 ---
 
 ## 📸 Screenshots
-> Suggested images to capture and drop into `docs/images/`:
 > - `pipeline-overview.png` — Jenkins Blue Ocean full pipeline view
 > - `argocd-dashboard.png` — ArgoCD app sync view (green ✅)
 > - `grafana-dashboard.png` — Grafana monitoring dashboard
