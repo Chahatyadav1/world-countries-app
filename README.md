@@ -379,12 +379,6 @@ Setup:
 
 ---
 
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
 <div align="center">
 
 Built with ❤️ by [Chahat Yadav](https://github.com/Chahatyadav1)
